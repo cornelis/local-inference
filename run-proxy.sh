@@ -12,7 +12,7 @@ docker run --rm --entrypoint sh -v "$VOL":/scripts -v "$HERE":/src:ro \
 docker rm -f frog-omp-default-proxy >/dev/null 2>&1 || true
 
 set -- docker run -d --name frog-omp-default-proxy --restart unless-stopped \
-  -p 127.0.0.1:18084:8080 -v "$VOL":/scripts
+  -p 127.0.0.1:18084:8080 -e BIND=0.0.0.0 -v "$VOL":/scripts
 if [ -n "${FROG_REASON_BUDGET:-}" ]; then set -- "$@" -e "FROG_REASON_BUDGET=$FROG_REASON_BUDGET"; fi
 if [ -n "${UPSTREAM_MODEL:-}" ]; then set -- "$@" -e "UPSTREAM_MODEL=$UPSTREAM_MODEL"; fi
 set -- "$@" python:3.12-alpine python -u /scripts/proxy.py

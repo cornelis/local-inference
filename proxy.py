@@ -13,8 +13,9 @@ Env:
   UPSTREAM_MODEL      model id sent upstream and accepted from clients
                       (default hf.co/bartowski/FrogNano-4B-2609-GGUF:Q4_K_M)
   FROG_MAX_TOKENS     per-request output cap enforced by the proxy (default 8192)
-  BIND / PORT         listen address (default 0.0.0.0:8080; publish it on
-                      127.0.0.1 from the container)
+  BIND / PORT         listen address (default 127.0.0.1:8080; run-proxy.sh
+                      sets BIND=0.0.0.0 inside the container and publishes
+                      127.0.0.1:18084)
 """
 import json, os, time, urllib.request, urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -206,5 +207,5 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    ThreadingHTTPServer((os.environ.get('BIND', '0.0.0.0'),
+    ThreadingHTTPServer((os.environ.get('BIND', '127.0.0.1'),
                          int(os.environ.get('PORT', '8080'))), Handler).serve_forever()

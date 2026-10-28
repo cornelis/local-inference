@@ -161,6 +161,10 @@ request on this machine passes through:
 The proxy's streaming path buffers upstream output until the retry decision is
 clear, then forwards it or replaces it with the retried answer.
 
+The proxy has no authentication. Keep it on loopback: `run-proxy.sh` publishes
+127.0.0.1:18084 and sets `BIND=0.0.0.0` only inside the container. Running
+`proxy.py` directly binds 127.0.0.1 by default.
+
 ## Cheaper thinking: budget, then answer
 
 A thinking model can spend the whole output budget reasoning and return nothing.
@@ -255,7 +259,7 @@ branch.
 
 Proxy environment: `FROG_REASON_BUDGET` (16000 chars), `FROG_UPSTREAM_BASE`
 (`http://host.docker.internal:18085`), `UPSTREAM_MODEL`, `FROG_MAX_TOKENS`
-(8192), `BIND`/`PORT` (`0.0.0.0:8080`).
+(8192), `BIND`/`PORT` (`127.0.0.1:8080`; the container sets `BIND=0.0.0.0`).
 
 Not reproducible from this folder: the prefix-cache, slot, batched-decode,
 ubatch and alternate-server numbers were one-off measurements, the LFM3 quality
